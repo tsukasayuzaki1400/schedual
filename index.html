@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pak Hei's Schedule, Bells & Reminders — Argyle Secondary</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Argyle Sched" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%236366f1'/><text x='50' y='65' font-size='50' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'>PH</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%236366f1'/><text x='50' y='65' font-size='50' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'>PH</text></svg>" />
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Dark Mode Theme Variables */
+    [data-theme="dark"] {
+      --card: #0f172a;
+      --secondary: #1e293b;
+      --foreground: #f8fafc;
+      --muted-foreground: #94a3b8;
+      --border: #334155;
+      --primary: #6366f1;
+      --primary-foreground: #ffffff;
+      color-scheme: dark;
+    }
+
+    /* Light Mode Theme Variables */
+    [data-theme="light"] {
+      --card: #ffffff;
+      --secondary: #f1f5f9;
+      --foreground: #0f172a;
+      --muted-foreground: #475569;
+      --border: #cbd5e1;
+      --primary: #4f46e5;
+      --primary-foreground: #ffffff;
+      color-scheme: light;
+    }
+
+    /* High-contrast badge & accent text adjustments for Light Mode */
+    [data-theme="light"] .text-emerald-400,
+    [data-theme="light"] .text-emerald-300,
+    [data-theme="light"] .text-emerald-500 { color: #047857 !important; }
+    [data-theme="light"] .text-amber-400,
+    [data-theme="light"] .text-amber-300,
+    [data-theme="light"] .text-amber-200\/90 { color: #b45309 !important; }
+    [data-theme="light"] .text-rose-400,
+    [data-theme="light"] .text-rose-300 { color: #be123c !important; }
+    [data-theme="light"] .text-sky-400,
+    [data-theme="light"] .text-sky-300 { color: #0369a1 !important; }
+    [data-theme="light"] .text-indigo-400,
+    [data-theme="light"] .text-indigo-300 { color: #4338ca !important; }
+    [data-theme="light"] .text-violet-400,
+    [data-theme="light"] .text-violet-300 { color: #6d28d9 !important; }
+    [data-theme="light"] .text-orange-400,
+    [data-theme="light"] .text-orange-300 { color: #c2410c !important; }
+    [data-theme="light"] .text-pink-400,
+    [data-theme="light"] .text-pink-300 { color: #be185d !important; }
+    [data-theme="light"] .text-teal-400,
+    [data-theme="light"] .text-teal-300 { color: #0f766e !important; }
+  </style>
+</head>
+<body data-theme="dark" class="bg-transparent text-[var(--foreground)] antialiased p-2 sm:p-4 transition-colors duration-200">
+  <div id="appContainer" data-theme="dark" class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl shadow-md overflow-hidden transition-colors duration-200">
+    
+    <!-- SECTION 1: TOP NAVIGATION BAR -->
+    <div class="bg-[var(--secondary)]/60 px-4 py-3 border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+          PH
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight leading-none">Pak Hei's Class Schedule</h1>
+            <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="liveClockBadge">Live</span>
+            </span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">
+            Argyle Secondary (2026–2027) · Grade 9 · Homeroom <strong class="text-[var(--foreground)]">H09-06</strong> (Yu, Hannah)
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Tabs + Theme Toggle + Settings Gear -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <div class="flex flex-wrap items-center bg-[var(--card)] p-1 rounded-xl border border-[var(--border)] shadow-sm">
+          <button id="tabDay" onclick="setTab('day')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
+            Daily
+          </button>
+          <button id="tabHomework" onclick="setTab('homework')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1">
+            <span>Homework</span>
+            <span id="hwTabCount" class="px-1.5 py-0.2 rounded-full bg-[var(--secondary)] text-xs font-bold">0</span>
+          </button>
+          <button id="tabHolidays" onclick="setTab('holidays')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
+            Holidays
+          </button>
+          <button id="tabGrid" onclick="setTab('grid')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
+            2-Week Grid
+          </button>
+          <button id="tabCourses" onclick="setTab('courses')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all">
+            Courses
+          </button>
+        </div>
+
+        <!-- Dark / Light Mode Toggle Button -->
+        <button
+          id="themeToggleBtn"
+          onclick="toggleTheme()"
+          title="Switch between Dark and Light mode"
+          class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] hover:bg-[var(--secondary)] text-xs font-bold shadow-sm transition"
+        >
+          <span id="themeToggleIcon">🌙</span>
+          <span id="themeToggleLabel">Dark</span>
+        </button>
+
+        <button
+          onclick="toggleSettingsDrawer()"
+          title="Rotation & Bell Settings"
+          class="p-2 rounded-xl bg-[var(--card)] border border-[var(--border)] hover:bg-[var(--secondary)] text-xs font-semibold shadow-sm transition"
+        >
+          ⚙️
+        </button>
+      </div>
+    </div>
+
+    <!-- COLLAPSIBLE SETTINGS DRAWER (Hidden by default to keep UI clean) -->
+    <div id="settingsDrawer" class="hidden bg-[var(--secondary)] px-4 py-3 border-b border-[var(--border)] text-xs">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Rotation Sync:</span>
+          <select
+            id="syncPresetSelect"
+            onchange="setSyncPreset(this.value)"
+            class="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)]"
+          >
+            <option value="official_pdf">Tue Oct 13 = Week 1 Day 2 (5, 6, 7, 8)</option>
+            <option value="seq_tue_w1d1">Tue Oct 13 = Week 1 Day 1 (1, 2, 3, 4)</option>
+          </select>
+          <div class="flex items-center gap-1">
+            <button onclick="nudgeOffset(-1)" class="px-2.5 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-semibold hover:opacity-80">-1 Step</button>
+            <button onclick="nudgeOffset(1)" class="px-2.5 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] font-semibold hover:opacity-80">+1 Step</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Friday Homeroom:</span>
+          <button
+            id="btnHrFriToggle"
+            onclick="toggleHrFriOverride()"
+            class="px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] font-semibold transition"
+          >
+            HR Fri: Auto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <div class="p-4">
+
+      <!-- ==================== TAB 1: DAILY VIEW ==================== -->
+      <div id="viewDay" class="space-y-4">
+        
+        <!-- HERO DATE & NAVIGATION BAR -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--border)]">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]" id="heroDayKicker">
+              SELECTED DATE
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 mt-0.5">
+              <h2 id="heroDateTitle" class="text-xl sm:text-2xl font-extrabold tracking-tight">
+                Monday, Oct 12
+              </h2>
+              <span id="headerBadge" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm">
+                Week 1 · Day 1
+              </span>
+              <span id="autoBellBadge" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+                🔔 Regular Bells
+              </span>
+            </div>
+          </div>
+
+          <!-- Date Switcher Controls -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="btnAuto" onclick="enableAutoMode()" class="text-xs font-bold px-2.5 py-1.5 rounded-lg border transition">
+              ⚡ Auto
+            </button>
+            <div class="inline-flex items-center bg-[var(--secondary)] p-0.5 rounded-lg border border-[var(--border)]">
+              <button onclick="stepSelectedDate(-1)" title="Previous Day" class="text-xs font-bold px-2.5 py-1 rounded-md hover:bg-[var(--card)] transition">◀</button>
+              <button onclick="jumpOffset(0)" class="text-xs font-semibold px-2.5 py-1 rounded-md hover:bg-[var(--card)] transition">Today</button>
+              <button onclick="jumpOffset(1)" class="text-xs font-semibold px-2.5 py-1 rounded-md hover:bg-[var(--card)] transition">Tomorrow</button>
+              <button onclick="stepSelectedDate(1)" title="Next Day" class="text-xs font-bold px-2.5 py-1 rounded-md hover:bg-[var(--card)] transition">▶</button>
+            </div>
+            <input
+              id="dateInput"
+              type="date"
+              onchange="onDateInputChange(this.value)"
+              class="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]"
+            />
+          </div>
+        </div>
+
+        <!-- SECTION: HOLIDAY & HOMEWORK REMINDERS -->
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+              Reminders & School Status
+            </span>
+            <div class="h-px flex-1 bg-[var(--border)]"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Left Card: This Day -->
+            <div id="bannerThisDay" class="p-3 rounded-xl border"></div>
+            <!-- Right Card: Next Day -->
+            <div id="bannerNextDay" class="p-3 rounded-xl border"></div>
+          </div>
+        </div>
+
+        <!-- SECTION: AUTOMATED BELL & CLASS TIMELINE -->
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <div class="flex items-center gap-2">
+              <span id="scheduleSectionTitle" class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Class Schedule
+              </span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-[var(--secondary)] text-[var(--foreground)] border border-[var(--border)]">
+                Order: <span id="periodOrderText">1 → 2 → 3 → 4</span>
+              </span>
+            </div>
+            <div id="morningNoteText" class="text-xs font-semibold text-[var(--muted-foreground)]"></div>
+          </div>
+
+          <!-- Class Cards + Break/Lunch Dividers -->
+          <div id="dailyTimeline" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 2: HOMEWORK TAB ==================== -->
+      <div id="viewHomework" class="hidden space-y-4">
+        <div class="p-3.5 rounded-xl bg-[var(--secondary)]/70 border border-[var(--border)]">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <h3 class="text-sm font-bold">📝 Add Class Homework / Specific Day Note</h3>
+            <span id="hwDateClassHint" class="text-xs font-semibold px-2 py-0.5 rounded bg-[var(--card)] border border-[var(--border)]"></span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1">Date</label>
+              <input
+                id="hwInputDate"
+                type="date"
+                onchange="updateHwCourseOptions()"
+                class="w-full text-xs font-medium px-2.5 py-2 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)]"
+              />
+            </div>
+            <div class="sm:col-span-4">
+              <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1">Class</label>
+              <select
+                id="hwInputPeriod"
+                class="w-full text-xs font-medium px-2.5 py-2 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)]"
+              ></select>
+            </div>
+            <div class="sm:col-span-3">
+              <label class="block text-xs font-semibold text-[var(--muted-foreground)] mb-1">Homework / Note</label>
+              <input
+                id="hwInputNote"
+                type="text"
+                placeholder="e.g. Unit test, Ch. 3 worksheet..."
+                onkeydown="if(event.key==='Enter') addHomeworkItem()"
+                class="w-full text-xs px-2.5 py-2 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)]"
+              />
+            </div>
+            <div class="sm:col-span-2 flex items-end">
+              <button
+                onclick="addHomeworkItem()"
+                class="w-full text-xs font-bold px-3 py-2 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition shadow-sm"
+              >
+                + Add Note
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="hwFilter-active" onclick="setHwFilter('active')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Active / Upcoming
+            </button>
+            <button id="hwFilter-all" onclick="setHwFilter('all')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              All Notes
+            </button>
+            <button id="hwFilter-done" onclick="setHwFilter('done')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Completed
+            </button>
+          </div>
+          <select
+            id="hwCourseFilter"
+            onchange="renderHomeworkTab()"
+            class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]"
+          >
+            <option value="all">Filter: All Classes</option>
+            <option value="1">P1 · Drama 9</option>
+            <option value="2">P2 · Social Studies 9</option>
+            <option value="3">P3 · ADST - Food Studies</option>
+            <option value="4">P4 · ADST - Woodwork 9</option>
+            <option value="5">P5 · English Language Arts 9</option>
+            <option value="6">P6 · Mathematics 9</option>
+            <option value="7">P7 · Physical & Health Ed 9</option>
+            <option value="8">P8 · Science 9</option>
+            <option value="20">P20 · Career Education 9</option>
+          </select>
+        </div>
+
+        <div id="homeworkListContainer" class="max-h-72 overflow-y-auto space-y-2 pr-1"></div>
+      </div>
+
+      <!-- ==================== TAB 3: HOLIDAYS & REMINDERS TAB ==================== -->
+      <div id="viewHolidays" class="hidden space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[var(--border)]">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="filterBtn-upcoming" onclick="setHolidayFilter('upcoming')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Upcoming
+            </button>
+            <button id="filterBtn-all" onclick="setHolidayFilter('all')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              All (2026–2027)
+            </button>
+            <button id="filterBtn-noschool" onclick="setHolidayFilter('noschool')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              🛑 (no school)
+            </button>
+            <button id="filterBtn-specialtime" onclick="setHolidayFilter('specialtime')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              ⏰ Late Start / Early Dismissal
+            </button>
+            <button id="filterBtn-yesschool" onclick="setHolidayFilter('yesschool')" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              ✅ (yes school) Events
+            </button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5">
+            <input id="customRemDate" type="date" class="text-xs px-2 py-1 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]" />
+            <input id="customRemTitle" type="text" placeholder="Custom event..." class="text-xs px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)] w-32" />
+            <select id="customRemSchool" class="text-xs px-2 py-1 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--foreground)]">
+              <option value="yes">(yes school)</option>
+              <option value="no">(no school)</option>
+            </select>
+            <button onclick="addCustomReminder()" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)]">+ Add</button>
+          </div>
+        </div>
+
+        <div id="holidaysListContainer" class="max-h-80 overflow-y-auto space-y-2 pr-1"></div>
+      </div>
+
+      <!-- ==================== TAB 4: 2-WEEK TIMETABLE GRID ==================== -->
+      <div id="viewGrid" class="hidden space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[var(--border)]">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="gridBtnW1" onclick="setGridWeek(1)" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Week 1 (Mon–Fri)
+            </button>
+            <button id="gridBtnW2" onclick="setGridWeek(2)" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Week 2 (Mon–Fri)
+            </button>
+            <button id="gridBtnBoth" onclick="setGridWeek(0)" class="text-xs font-semibold px-3 py-1.5 rounded-lg border">
+              Show Both Weeks
+            </button>
+          </div>
+          <span class="text-xs font-medium text-[var(--muted-foreground)]">Click any day column to open in Daily View</span>
+        </div>
+        <div id="gridTablesWrapper" class="max-h-80 overflow-y-auto space-y-4 pr-1"></div>
+      </div>
+
+      <!-- ==================== TAB 5: ALL COURSES ==================== -->
+      <div id="viewCourses" class="hidden">
+        <div id="coursesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "pakhei_argyle_schedule_v7";
+
+    const COURSES = {
+      1: { period: 1, dayType: "Day 1", code: "MDR-09-01", name: "Drama 9", room: "Room 167", teacher: "Featherstone, Grant", accent: "border-l-4 border-l-purple-500", badgeBg: "bg-purple-500/15 text-purple-400 border-purple-500/30" },
+      2: { period: 2, dayType: "Day 1", code: "MSS-09-02", name: "Social Studies 9", room: "Room 146", teacher: "Ramsay, Jon", accent: "border-l-4 border-l-amber-500", badgeBg: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+      3: { period: 3, dayType: "Day 1", code: "MADFS09-03", name: "ADST - Food Studies", room: "Room 201", teacher: "Matthews, Nicole", accent: "border-l-4 border-l-emerald-500", badgeBg: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
+      4: { period: 4, dayType: "Day 1", code: "MADW-09-03", name: "ADST - Woodwork 9", room: "Room 140", teacher: "Bankes, Eric", accent: "border-l-4 border-l-orange-500", badgeBg: "bg-orange-500/15 text-orange-400 border-orange-500/30" },
+      5: { period: 5, dayType: "Day 2", code: "MEN-09-05", name: "English Language Arts 9", room: "Room 265", teacher: "Villegas, Maria-Jose", accent: "border-l-4 border-l-sky-500", badgeBg: "bg-sky-500/15 text-sky-400 border-sky-500/30" },
+      6: { period: 6, dayType: "Day 2", code: "MMA-09-01", name: "Mathematics 9", room: "Room 127", teacher: "Kim, Jia", accent: "border-l-4 border-l-blue-500", badgeBg: "bg-blue-500/15 text-blue-400 border-blue-500/30" },
+      7: { period: 7, dayType: "Day 2", code: "MPHE-09-01", name: "Physical & Health Education 9", room: "GYM", teacher: "Mah, Stephen", accent: "border-l-4 border-l-rose-500", badgeBg: "bg-rose-500/15 text-rose-400 border-rose-500/30" },
+      8: { period: 8, dayType: "Day 2", code: "MSC-09-08", name: "Science 9", room: "Room 154", teacher: "Bentley, Scott", accent: "border-l-4 border-l-teal-500", badgeBg: "bg-teal-500/15 text-teal-400 border-teal-500/30" },
+      20: { period: 20, dayType: "Day 1–2", code: "MCE-09-02", name: "Career Education 9", room: "X Room", teacher: "Romano, Tracy", accent: "border-l-4 border-l-slate-400", badgeBg: "bg-slate-500/15 text-slate-400 border-slate-500/30" }
+    };
+
+    const TEN_DAY_CYCLE = [
+      { week: 1, colIndex: 0, periods: [1, 2, 3, 4] },
+      { week: 1, colIndex: 1, periods: [5, 6, 7, 8] },
+      { week: 1, colIndex: 2, periods: [2, 3, 1, 4] },
+      { week: 1, colIndex: 3, periods: [6, 7, 5, 8] },
+      { week: 1, colIndex: 4, periods: [3, 1, 2, 4] },
+      { week: 2, colIndex: 0, periods: [7, 5, 6, 8] },
+      { week: 2, colIndex: 1, periods: [1, 2, 3, 4] },
+      { week: 2, colIndex: 2, periods: [5, 6, 7, 8] },
+      { week: 2, colIndex: 3, periods: [2, 3, 1, 4] },
+      { week: 2, colIndex: 4, periods: [6, 7, 5, 8] }
+    ];
+
+    const OFFICIAL_CALENDAR_EVENTS = [
+      { date: "2026-09-07", title: "Labour Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2026-09-08", title: "Schools Open · First Day of School (Start of Term #1)", school: true, timeNote: "9:10 AM – 3:00 PM", category: "event" },
+      { date: "2026-09-11", title: "Fire Drill", school: true, timeNote: "12:30 PM", category: "event" },
+      { date: "2026-09-14", title: "Fire Drill", school: true, timeNote: "12:30 PM", category: "event" },
+      { date: "2026-09-15", title: "Grade 8 Parent Night", school: true, category: "event" },
+      { date: "2026-09-16", title: "PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2026-09-17", title: "Photo Day", school: true, category: "event" },
+      { date: "2026-09-18", title: "Terry Fox Run · End of Course Changes · Football Home Opener", school: true, category: "event" },
+      { date: "2026-09-22", title: "Grade 12 Parent Night", school: true, category: "event" },
+      { date: "2026-09-24", title: "Grade 8 Cheakamus Retreat", school: true, category: "event" },
+      { date: "2026-09-29", title: "Truth and Reconciliation Assembly", school: true, category: "event" },
+      { date: "2026-09-30", title: "National Day for Truth and Reconciliation", school: false, category: "holiday" },
+      { date: "2026-10-02", title: "Canadian Universities Event", school: true, timeNote: "11:30 AM – 1:00 PM", category: "event" },
+      { date: "2026-10-05", title: "World Teachers' Day", school: true, category: "event" },
+      { date: "2026-10-08", title: "Photo Retakes · Fall Team Photos", school: true, category: "event" },
+      { date: "2026-10-09", title: "School Based Non-Instructional Day (Pro-D)", school: false, category: "prod" },
+      { date: "2026-10-12", title: "Thanksgiving Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2026-10-15", title: "BC Shakeout Drill & Choir Retreat", school: true, timeNote: "10:20 AM", category: "event" },
+      { date: "2026-10-16", title: "Japan School Visit & Choir Retreat", school: true, category: "event" },
+      { date: "2026-10-20", title: "Lockdown Drill", school: true, timeNote: "10:20 AM", category: "event" },
+      { date: "2026-10-21", title: "Gr 10 Assembly (P6) · PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2026-10-23", title: "Province-wide Non-Instructional Day (NVTA Pro-D)", school: false, category: "prod" },
+      { date: "2026-10-26", title: "BC PSI Fair", school: true, timeNote: "2:15 – 3:00 PM", category: "event" },
+      { date: "2026-10-27", title: "School Planning Event", school: true, category: "event" },
+      { date: "2026-10-28", title: "Staff Collab Day · Indigenous Celebration Day (Late Start)", school: true, timeNote: "Late Start: 9:48 AM – 3:00 PM", bellOverride: "late_wed", category: "specialtime" },
+      { date: "2026-10-30", title: "Grad Photos", school: true, category: "event" },
+      { date: "2026-11-02", title: "Grad Photos", school: true, category: "event" },
+      { date: "2026-11-03", title: "Grad Photos", school: true, category: "event" },
+      { date: "2026-11-04", title: "Literacy 12 Exams · Grad Photos (Gr 9 Has Classes)", school: true, category: "event" },
+      { date: "2026-11-05", title: "Parent Teacher Interviews (Early Dismissal)", school: true, timeNote: "Early Dismissal at 1:50 PM", bellOverride: "early_dis", category: "specialtime" },
+      { date: "2026-11-06", title: "Football Sr's Night (Early Dismissal)", school: true, timeNote: "Early Dismissal at 1:50 PM", bellOverride: "early_dis", category: "specialtime" },
+      { date: "2026-11-09", title: "Grad Photos", school: true, category: "event" },
+      { date: "2026-11-10", title: "Remembrance Day Ceremony · Grad Photos", school: true, category: "event" },
+      { date: "2026-11-11", title: "Remembrance Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2026-11-12", title: "Grad Photos", school: true, category: "event" },
+      { date: "2026-11-13", title: "Grad Buddy Photos", school: true, category: "event" },
+      { date: "2026-11-18", title: "PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2026-11-24", title: "PSI Parent Info Night", school: true, category: "event" },
+      { date: "2026-11-25", title: "Indigenous Celebration Day", school: true, category: "event" },
+      { date: "2026-11-27", title: "Review & Completion (RCE) Day · End of Term #1 (No Scheduled Classes)", school: false, category: "rce" },
+      { date: "2026-11-30", title: "Start of Term #2", school: true, category: "event" },
+      { date: "2026-12-01", title: "Grad Photo Retakes", school: true, category: "event" },
+      { date: "2026-12-04", title: "District-wide Non-Instructional Day (Curriculum Implementation)", school: false, category: "prod" },
+      { date: "2026-12-07", title: "Winter Drama Festival", school: true, category: "event" },
+      { date: "2026-12-08", title: "Report Cards Published", school: true, category: "event" },
+      { date: "2026-12-15", title: "Winter Music Concert (St. Andrews Wesley)", school: true, category: "event" },
+      { date: "2026-12-16", title: "PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2026-12-18", title: "Winter Breakfast · Schools Close for Winter Vacation", school: true, timeNote: "Last Day Before Break (Ends 3:00 PM)", category: "event" },
+      { date: "2026-12-21", title: "Winter Vacation Day 1", school: false, category: "holiday" },
+      { date: "2026-12-22", title: "Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-23", title: "Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-24", title: "Christmas Eve · Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-25", title: "Christmas Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2026-12-28", title: "Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-29", title: "Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-30", title: "Winter Vacation", school: false, category: "holiday" },
+      { date: "2026-12-31", title: "New Year's Eve · Winter Vacation", school: false, category: "holiday" },
+      { date: "2027-01-01", title: "New Year's Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2027-01-04", title: "Schools Reopen After Winter Vacation · Classes Resume", school: true, timeNote: "9:10 AM – 3:00 PM", category: "event" },
+      { date: "2027-01-11", title: "FRAL 12 Written Exams", school: true, category: "event" },
+      { date: "2027-01-13", title: "FRAL 12 Oral Exams", school: true, category: "event" },
+      { date: "2027-01-14", title: "FRAL 12 Oral Exams", school: true, category: "event" },
+      { date: "2027-01-15", title: "School Based Non-Instructional Day (Pro-D)", school: false, category: "prod" },
+      { date: "2027-01-19", title: "Jr Band Concert", school: true, category: "event" },
+      { date: "2027-01-20", title: "Indigenous Celebration Day · PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-01-21", title: "Literacy 10 Exams", school: true, category: "event" },
+      { date: "2027-01-22", title: "Numeracy 10 Exams", school: true, category: "event" },
+      { date: "2027-01-27", title: "Grade 9 Immunizations", school: true, category: "event" },
+      { date: "2027-01-28", title: "Grad Winter Formal", school: true, category: "event" },
+      { date: "2027-01-29", title: "Scholarship Applications Due (9:00 AM) · FOS Music Tours", school: true, category: "event" },
+      { date: "2027-02-01", title: "Jr. Drama Show", school: true, category: "event" },
+      { date: "2027-02-02", title: "Jr. Drama Show", school: true, category: "event" },
+      { date: "2027-02-03", title: "Fire Drill & Jr. Drama Show", school: true, timeNote: "12:30 PM", category: "event" },
+      { date: "2027-02-04", title: "Grade Assemblies (Gr 9 in P6) · Parent Teacher Interviews (Early Dismissal)", school: true, timeNote: "Early Dismissal at 1:50 PM", bellOverride: "early_dis", category: "specialtime" },
+      { date: "2027-02-05", title: "MyEd Course Selection Opens (Early Dismissal)", school: true, timeNote: "Early Dismissal at 1:50 PM", bellOverride: "early_dis", category: "specialtime" },
+      { date: "2027-02-09", title: "Course Programming Parent Night", school: true, category: "event" },
+      { date: "2027-02-10", title: "Grade 7 Tours & Grade 7 Parent Night", school: true, category: "event" },
+      { date: "2027-02-12", title: "District-wide Non-Instructional Day (NVTA Pro-D)", school: false, category: "prod" },
+      { date: "2027-02-15", title: "BC Family Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2027-02-17", title: "Indigenous Celebration Day · PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-02-18", title: "Drama Elementary Tours", school: true, category: "event" },
+      { date: "2027-02-24", title: "Staff Collab Day (Late Start)", school: true, timeNote: "Late Start: 9:48 AM – 3:00 PM", bellOverride: "late_wed", category: "specialtime" },
+      { date: "2027-02-26", title: "Review & Completion (RCE) Day · End of Term #2 (No Scheduled Classes)", school: false, category: "rce" },
+      { date: "2027-03-01", title: "Start of Term #3", school: true, category: "event" },
+      { date: "2027-03-04", title: "Lockdown Drill · Course Verifications Published", school: true, timeNote: "12:30 PM", category: "event" },
+      { date: "2027-03-08", title: "Sr Band Concert", school: true, category: "event" },
+      { date: "2027-03-09", title: "Report Cards Published", school: true, category: "event" },
+      { date: "2027-03-12", title: "Schools Close for Spring Vacation", school: true, timeNote: "Last Day Before Spring Break (Ends 3:00 PM)", category: "event" },
+      { date: "2027-03-15", title: "Spring Vacation Period Begins", school: false, category: "holiday" },
+      { date: "2027-03-16", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-17", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-18", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-19", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-22", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-23", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-24", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-25", title: "Spring Vacation", school: false, category: "holiday" },
+      { date: "2027-03-26", title: "Good Friday Statutory Holiday", school: false, category: "holiday" },
+      { date: "2027-03-29", title: "Easter Monday Statutory Holiday", school: false, category: "holiday" },
+      { date: "2027-03-30", title: "Schools Reopen After Spring Vacation", school: true, timeNote: "9:10 AM – 3:00 PM", category: "event" },
+      { date: "2027-04-07", title: "Spring Team Photos", school: true, category: "event" },
+      { date: "2027-04-12", title: "FOS Music Festival", school: true, category: "event" },
+      { date: "2027-04-14", title: "Assessment Catch Ups · PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-04-20", title: "Grade 12 Assembly", school: true, timeNote: "8:30 AM", category: "event" },
+      { date: "2027-04-21", title: "Admin Assistant Day", school: true, category: "event" },
+      { date: "2027-04-23", title: "Valedictorian Applications Due", school: true, category: "event" },
+      { date: "2027-04-26", title: "District-wide Non-Instructional Day (NVTA Pro-D)", school: false, category: "prod" },
+      { date: "2027-04-27", title: "School Planning Event", school: true, category: "event" },
+      { date: "2027-04-28", title: "Staff Collab Day · Indigenous Celebration Day (Late Start)", school: true, timeNote: "Late Start: 9:48 AM – 3:00 PM", bellOverride: "late_wed", category: "specialtime" },
+      { date: "2027-04-30", title: "Grad Gown Forms & Grad Write-ups Due", school: true, category: "event" },
+      { date: "2027-05-09", title: "Mother's Day", school: false, category: "holiday" },
+      { date: "2027-05-12", title: "Grade 9 Immunization Catch Ups", school: true, category: "event" },
+      { date: "2027-05-14", title: "Cabaret", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-05-17", title: "Drama Spring Show", school: true, category: "event" },
+      { date: "2027-05-18", title: "FOS Zone Concert · Drama Spring Show", school: true, category: "event" },
+      { date: "2027-05-19", title: "PAC Meeting · Drama Spring Show", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-05-20", title: "Drama Spring Show", school: true, category: "event" },
+      { date: "2027-05-21", title: "Drama Spring Show", school: true, category: "event" },
+      { date: "2027-05-24", title: "Victoria Day Statutory Holiday", school: false, category: "holiday" },
+      { date: "2027-05-26", title: "Staff Collab Day (Late Start)", school: true, timeNote: "Late Start: 9:48 AM – 3:00 PM", bellOverride: "late_wed", category: "specialtime" },
+      { date: "2027-05-31", title: "Pride Week Begins", school: true, category: "event" },
+      { date: "2027-06-01", title: "Pride Week", school: true, category: "event" },
+      { date: "2027-06-02", title: "Pride Week", school: true, category: "event" },
+      { date: "2027-06-03", title: "School Awards · Pride Week", school: true, category: "event" },
+      { date: "2027-06-04", title: "Pride Week", school: true, category: "event" },
+      { date: "2027-06-08", title: "Final Band Concert", school: true, category: "event" },
+      { date: "2027-06-09", title: "Assessment Catch Ups · Final Choir Concert", school: true, category: "event" },
+      { date: "2027-06-10", title: "Drama Awards", school: true, category: "event" },
+      { date: "2027-06-15", title: "Athletic Awards", school: true, category: "event" },
+      { date: "2027-06-16", title: "PAC Meeting", school: true, timeNote: "7:00 PM", category: "event" },
+      { date: "2027-06-20", title: "Father's Day", school: false, category: "holiday" },
+      { date: "2027-06-21", title: "National Indigenous Peoples Day · Grad Ceremony", school: true, category: "event" },
+      { date: "2027-06-23", title: "Last Day of Scheduled Classes · End of Term #3 · Summer Send Off BBQ", school: true, category: "event" },
+      { date: "2027-06-24", title: "Review & Completion (RCE) Day (No Scheduled Classes)", school: false, category: "rce" },
+      { date: "2027-06-25", title: "Review & Completion (RCE) Day · Grad Banquet (No Scheduled Classes)", school: false, category: "rce" },
+      { date: "2027-06-28", title: "Report Cards Published", school: true, category: "event" },
+      { date: "2027-06-29", title: "Last Day for Students · Yearbook Distribution", school: true, category: "event" },
+      { date: "2027-06-30", title: "Administrative Day (Non-Instructional Day)", school: false, category: "prod" }
+    ];
+
+    const SHORT_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+    const FULL_DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const BELL_SCHEDULES = {
+      regular: {
+        name: "Regular Bells (9:10 AM – 3:00 PM)",
+        shortName: "Regular (9:10–3:00)",
+        morningStartMin: 508,
+        morningEndMin: 550,
+        morningNote: "8:28 – 9:10 AM · Flex Time",
+        slots: [
+          { time: "9:10 – 10:20 AM", startMin: 550, endMin: 620, breakAfter: "☕ 10:20 – 10:30 AM · Morning Break (10m)" },
+          { time: "10:30 – 11:40 AM", startMin: 630, endMin: 700, breakAfter: "☕ 11:40 – 11:50 AM · Morning Break (10m)" },
+          { time: "11:50 AM – 1:00 PM", startMin: 710, endMin: 780, breakAfter: "🍽️ 1:00 – 1:50 PM · Lunch Break (50m)" },
+          { time: "1:50 – 3:00 PM", startMin: 830, endMin: 900, breakAfter: null }
+        ]
+      },
+      late_wed: {
+        name: "Late Start Wednesday (9:48 AM – 3:00 PM)",
+        shortName: "Late Start Wed (9:48–3:00)",
+        morningStartMin: 508,
+        morningEndMin: 588,
+        morningNote: "8:28 – 9:48 AM · Staff Collab (Late Start)",
+        slots: [
+          { time: "9:48 – 10:50 AM", startMin: 588, endMin: 650, breakAfter: "☕ 10:50 – 10:59 AM · Morning Break" },
+          { time: "11:00 AM – 12:00 PM", startMin: 660, endMin: 720, breakAfter: "☕ 12:00 – 12:10 PM · Morning Break" },
+          { time: "12:10 – 1:10 PM", startMin: 730, endMin: 790, breakAfter: "🍽️ 1:10 – 2:00 PM · Lunch Break (50m)" },
+          { time: "2:00 – 3:00 PM", startMin: 840, endMin: 900, breakAfter: null }
+        ]
+      },
+      early_dis: {
+        name: "Early Dismissal (9:10 AM – 1:50 PM)",
+        shortName: "Early Dismissal (9:10–1:50)",
+        morningStartMin: 508,
+        morningEndMin: 550,
+        morningNote: "8:28 – 9:10 AM · Flex (Early Dismissal 1:50 PM)",
+        slots: [
+          { time: "9:10 – 10:05 AM", startMin: 550, endMin: 605, breakAfter: "☕ 10:05 – 10:15 AM · Morning Break" },
+          { time: "10:15 – 11:10 AM", startMin: 615, endMin: 670, breakAfter: "☕ 11:10 – 11:20 AM · Morning Break" },
+          { time: "11:20 AM – 12:15 PM", startMin: 680, endMin: 735, breakAfter: "🍽️ 12:15 – 12:55 PM · Lunch Break (40m)" },
+          { time: "12:55 – 1:50 PM", startMin: 775, endMin: 830, breakAfter: null }
+        ]
+      },
+      hr_fri: {
+        name: "Homeroom Friday (8:30 AM – 3:00 PM)",
+        shortName: "Homeroom Fri (8:30–3:00)",
+        morningStartMin: 510,
+        morningEndMin: 580,
+        morningNote: "9:50 – 10:20 AM · Homeroom H09-06",
+        slots: [
+          { time: "8:30 – 9:40 AM", startMin: 510, endMin: 580, breakAfter: "🏫 9:50 – 10:20 AM · Homeroom H09-06 · 10:20 Break" },
+          { time: "10:29 – 11:40 AM", startMin: 629, endMin: 700, breakAfter: "☕ 11:40 – 11:50 AM · Morning Break" },
+          { time: "11:50 AM – 1:00 PM", startMin: 710, endMin: 780, breakAfter: "🍽️ 1:00 – 1:50 PM · Lunch Break (50m)" },
+          { time: "1:50 – 3:00 PM", startMin: 830, endMin: 900, breakAfter: null }
+        ]
+      }
+    };
+
+    let state = {
+      tab: "day",
+      theme: "dark",
+      autoFollow: true,
+      syncPreset: "official_pdf",
+      manualStepOffset: 0,
+      selectedDateStr: "",
+      hrFriOverride: false,
+      settingsOpen: false,
+      gridWeek: 1,
+      overrideCycleIdx: null,
+      holidayFilter: "upcoming",
+      hwFilter: "active",
+      customReminders: [],
+      homeworkList: []
+    };
+
+    function applyTheme() {
+      const theme = state.theme === "light" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+      document.body.setAttribute("data-theme", theme);
+      const container = document.getElementById("appContainer");
+      if (container) container.setAttribute("data-theme", theme);
+
+      const iconEl = document.getElementById("themeToggleIcon");
+      const labelEl = document.getElementById("themeToggleLabel");
+      if (iconEl && labelEl) {
+        if (theme === "light") {
+          iconEl.textContent = "☀️";
+          labelEl.textContent = "Light";
+        } else {
+          iconEl.textContent = "🌙";
+          labelEl.textContent = "Dark";
+        }
+      }
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      applyTheme();
+      saveSettings();
+    }
+
+    function loadSavedSettings() {
+      try {
+        const rawV7 = localStorage.getItem(STORAGE_KEY);
+        const rawOld = localStorage.getItem("pakhei_argyle_schedule_v6") || localStorage.getItem("pakhei_argyle_schedule_v5");
+        const raw = rawV7 || rawOld;
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.theme === "light" || parsed.theme === "dark") state.theme = parsed.theme;
+          if (rawV7) {
+            if (parsed.syncPreset) state.syncPreset = parsed.syncPreset;
+            if (typeof parsed.manualStepOffset === "number") state.manualStepOffset = parsed.manualStepOffset;
+          }
+          if (Array.isArray(parsed.customReminders)) state.customReminders = parsed.customReminders;
+          if (Array.isArray(parsed.homeworkList)) state.homeworkList = parsed.homeworkList;
+        }
+      } catch (e) {}
+      applyTheme();
+    }
+
+    function saveSettings() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          theme: state.theme,
+          syncPreset: state.syncPreset,
+          manualStepOffset: state.manualStepOffset,
+          customReminders: state.customReminders,
+          homeworkList: state.homeworkList
+        }));
+      } catch (e) {}
+    }
+
+    function toggleSettingsDrawer() {
+      state.settingsOpen = !state.settingsOpen;
+      document.getElementById("settingsDrawer").classList.toggle("hidden", !state.settingsOpen);
+    }
+
+    function getAllEvents() {
+      return [...OFFICIAL_CALENDAR_EVENTS, ...state.customReminders].sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function getEventsForDate(isoStr) {
+      return getAllEvents().filter(e => e.date === isoStr);
+    }
+
+    function getHomeworkForDate(isoStr, onlyActive = false) {
+      return state.homeworkList.filter(h => h.date === isoStr && (!onlyActive || !h.done));
+    }
+
+    function formatDateISO(d) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function parseLocalDate(isoStr) {
+      const [y, m, d] = isoStr.split("-").map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function formatShortDate(isoStr) {
+      const d = parseLocalDate(isoStr);
+      return `${FULL_DAYS[d.getDay()].slice(0, 3)}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+    }
+
+    function isNoSchoolDate(dateObj) {
+      const dow = dateObj.getDay();
+      if (dow === 0 || dow === 6) return true;
+      const iso = formatDateISO(dateObj);
+      const evs = getEventsForDate(iso);
+      return evs.some(e => e.school === false);
+    }
+
+    function getNextSchoolDay(dateObj) {
+      const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), 12, 0, 0);
+      let safety = 0;
+      while (isNoSchoolDate(d) && safety < 30) {
+        d.setDate(d.getDate() + 1);
+        safety++;
+      }
+      return d;
+    }
+
+    function countWeekdaysBetween(anchorDate, targetDate) {
+      const a = new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate(), 12, 0, 0);
+      const b = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 12, 0, 0);
+      if (a.getTime() === b.getTime()) return 0;
+      const step = b > a ? 1 : -1;
+      let count = 0;
+      const cur = new Date(a);
+      while (cur.getTime() !== b.getTime()) {
+        cur.setDate(cur.getDate() + step);
+        const dow = cur.getDay();
+        if (dow >= 1 && dow <= 5) count += step;
+      }
+      return count;
+    }
+
+    function getCycleIndexForDate(dateObj) {
+      if (state.overrideCycleIdx !== null) return state.overrideCycleIdx;
+      const schoolDay = getNextSchoolDay(dateObj);
+      const anchorTueOct13 = new Date(2026, 9, 13, 12, 0, 0);
+
+      let baseIdx = 0;
+      if (state.syncPreset === "seq_tue_w1d1") {
+        const weekdayDiff = countWeekdaysBetween(anchorTueOct13, schoolDay);
+        baseIdx = ((weekdayDiff % 10) + 10) % 10;
+      } else {
+        const dow = schoolDay.getDay();
+        const colIdx = dow - 1;
+        const monday = new Date(schoolDay);
+        monday.setDate(schoolDay.getDate() + (1 - dow));
+        const refMondayOct12 = new Date(2026, 9, 12, 12, 0, 0);
+        const diffWeeks = Math.round((monday - refMondayOct12) / (7 * 86400 * 1000));
+        const isEvenWeek = (((diffWeeks % 2) + 2) % 2) === 0;
+        const weekNum = isEvenWeek ? 1 : 2;
+        baseIdx = (weekNum === 1 ? 0 : 5) + colIdx;
+      }
+      return (((baseIdx + state.manualStepOffset) % 10) + 10) % 10;
+    }
+
+    function getPeriodsForDateISO(isoStr) {
+      const d = parseLocalDate(isoStr);
+      if (isNoSchoolDate(d)) return [];
+      const cIdx = getCycleIndexForDate(d);
+      return TEN_DAY_CYCLE[cIdx].periods;
+    }
+
+    function getAutomatedBellMode(isoStr) {
+      const evs = getEventsForDate(isoStr);
+      for (const e of evs) {
+        if (e.bellOverride) return e.bellOverride;
+      }
+      const d = parseLocalDate(isoStr);
+      if (d.getDay() === 5 && state.hrFriOverride) {
+        return "hr_fri";
+      }
+      return "regular";
+    }
+
+    function toggleHrFriOverride() {
+      state.hrFriOverride = !state.hrFriOverride;
+      render();
+    }
+
+    function syncAutoDate() {
+      if (!state.autoFollow) return;
+      const now = new Date();
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
+      const todayIso = formatDateISO(d);
+      const todayHasHoliday = getEventsForDate(todayIso).length > 0 || getHomeworkForDate(todayIso, true).length > 0;
+      if (!todayHasHoliday && now.getDay() >= 1 && now.getDay() <= 5 && now.getHours() >= 15) {
+        d.setDate(d.getDate() + 1);
+      }
+      const iso = formatDateISO(d);
+      if (state.selectedDateStr !== iso) {
+        state.selectedDateStr = iso;
+        state.overrideCycleIdx = null;
+      }
+    }
+
+    function setSelectedDateISO(isoStr) {
+      state.selectedDateStr = isoStr;
+      state.overrideCycleIdx = null;
+      render();
+    }
+
+    function enableAutoMode() {
+      state.autoFollow = true;
+      state.overrideCycleIdx = null;
+      syncAutoDate();
+      render();
+    }
+
+    function jumpOffset(daysOffset) {
+      state.autoFollow = false;
+      const now = new Date();
+      const target = new Date(now.getFullYear(), now.getMonth(), now.getDate() + daysOffset, 12, 0, 0);
+      setSelectedDateISO(formatDateISO(target));
+    }
+
+    function stepSelectedDate(dir) {
+      state.autoFollow = false;
+      const cur = parseLocalDate(state.selectedDateStr);
+      cur.setDate(cur.getDate() + dir);
+      setSelectedDateISO(formatDateISO(cur));
+    }
+
+    function onDateInputChange(val) {
+      if (!val) return;
+      state.autoFollow = false;
+      setSelectedDateISO(val);
+    }
+
+    function setSyncPreset(val) {
+      state.syncPreset = val;
+      state.manualStepOffset = 0;
+      state.overrideCycleIdx = null;
+      saveSettings();
+      render();
+    }
+
+    function nudgeOffset(delta) {
+      state.overrideCycleIdx = null;
+      state.manualStepOffset = ((state.manualStepOffset + delta) % 10 + 10) % 10;
+      saveSettings();
+      render();
+    }
+
+    function setTab(t) {
+      state.tab = t;
+      if (t === "homework") {
+        const hwDateEl = document.getElementById("hwInputDate");
+        if (!hwDateEl.value) {
+          const effDay = getNextSchoolDay(parseLocalDate(state.selectedDateStr));
+          hwDateEl.value = formatDateISO(effDay);
+        }
+        updateHwCourseOptions();
+      }
+      render();
+    }
+
+    function openAddHomeworkForClass(dateIso, periodNum) {
+      state.tab = "homework";
+      document.getElementById("hwInputDate").value = dateIso;
+      updateHwCourseOptions(periodNum);
+      render();
+      setTimeout(() => {
+        const noteEl = document.getElementById("hwInputNote");
+        if (noteEl) noteEl.focus();
+      }, 50);
+    }
+
+    function updateHwCourseOptions(preferredPeriod = null) {
+      const dateInput = document.getElementById("hwInputDate");
+      const selectEl = document.getElementById("hwInputPeriod");
+      const hintEl = document.getElementById("hwDateClassHint");
+      if (!dateInput || !selectEl) return;
+
+      const iso = dateInput.value || state.selectedDateStr;
+      const dayPeriods = getPeriodsForDateISO(iso);
+      const isNoSch = isNoSchoolDate(parseLocalDate(iso));
+
+      if (hintEl) {
+        hintEl.textContent = isNoSch
+          ? `${formatShortDate(iso)} · (no school)`
+          : `${formatShortDate(iso)} · Periods ${dayPeriods.join(", ")} (yes school)`;
+      }
+
+      const currentVal = preferredPeriod || Number(selectEl.value) || (dayPeriods[0] || 1);
+      let html = "";
+
+      if (dayPeriods.length > 0) {
+        html += `<optgroup label="Scheduled on ${formatShortDate(iso)}">`;
+        dayPeriods.forEach(p => {
+          const c = COURSES[p];
+          html += `<option value="${p}" ${p === currentVal ? "selected" : ""}>★ P${c.period} · ${c.name} (${c.room})</option>`;
+        });
+        html += `</optgroup>`;
+      }
+
+      html += `<optgroup label="All Courses">`;
+      Object.values(COURSES).forEach(c => {
+        if (!dayPeriods.includes(c.period)) {
+          html += `<option value="${c.period}" ${c.period === currentVal ? "selected" : ""}>P${c.period} · ${c.name} (${c.room})</option>`;
+        }
+      });
+      html += `</optgroup>`;
+
+      selectEl.innerHTML = html;
+    }
+
+    function addHomeworkItem() {
+      const dateVal = document.getElementById("hwInputDate").value || state.selectedDateStr;
+      const periodVal = Number(document.getElementById("hwInputPeriod").value) || 1;
+      const noteVal = document.getElementById("hwInputNote").value.trim();
+      if (!dateVal || !noteVal) return;
+
+      state.homeworkList.push({
+        id: "hw_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        date: dateVal,
+        period: periodVal,
+        note: noteVal,
+        done: false
+      });
+
+      document.getElementById("hwInputNote").value = "";
+      saveSettings();
+      render();
+    }
+
+    function toggleHomeworkDone(id) {
+      const item = state.homeworkList.find(h => h.id === id);
+      if (item) {
+        item.done = !item.done;
+        saveSettings();
+        render();
+      }
+    }
+
+    function deleteHomeworkItem(id) {
+      state.homeworkList = state.homeworkList.filter(h => h.id !== id);
+      saveSettings();
+      render();
+    }
+
+    function setHwFilter(f) {
+      state.hwFilter = f;
+      renderHomeworkTab();
+    }
+
+    function setHolidayFilter(f) {
+      state.holidayFilter = f;
+      renderHolidaysTab();
+    }
+
+    function setGridWeek(w) {
+      state.gridWeek = w;
+      renderGrid();
+    }
+
+    function selectCycleFromGrid(cIdx) {
+      state.autoFollow = false;
+      state.overrideCycleIdx = null;
+      const start = getNextSchoolDay(parseLocalDate(state.selectedDateStr));
+      const candidate = new Date(start);
+      for (let i = 0; i < 25; i++) {
+        if (!isNoSchoolDate(candidate) && getCycleIndexForDate(candidate) === cIdx) {
+          state.selectedDateStr = formatDateISO(candidate);
+          break;
+        }
+        candidate.setDate(candidate.getDate() + 1);
+      }
+      state.overrideCycleIdx = cIdx;
+      state.tab = "day";
+      render();
+    }
+
+    function jumpToHolidayDate(isoStr, dayBefore = false) {
+      state.autoFollow = false;
+      const d = parseLocalDate(isoStr);
+      if (dayBefore) d.setDate(d.getDate() - 1);
+      state.tab = "day";
+      setSelectedDateISO(formatDateISO(d));
+    }
+
+    function addCustomReminder() {
+      const dateVal = document.getElementById("customRemDate").value || state.selectedDateStr;
+      const titleVal = document.getElementById("customRemTitle").value.trim();
+      const schoolVal = document.getElementById("customRemSchool").value === "yes";
+      if (!dateVal || !titleVal) return;
+
+      state.customReminders.push({
+        date: dateVal,
+        title: titleVal,
+        school: schoolVal,
+        category: schoolVal ? "event" : "holiday",
+        custom: true
+      });
+      document.getElementById("customRemTitle").value = "";
+      saveSettings();
+      render();
+    }
+
+    function formatSchoolPillHtml(hasSchool) {
+      return hasSchool
+        ? `<span class="inline-block text-xs font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">(yes school)</span>`
+        : `<span class="inline-block text-xs font-bold px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-400 border border-rose-500/30">(no school)</span>`;
+    }
+
+    function renderDayBanners(selectedDate, now) {
+      const todayIso = formatDateISO(now);
+      const selectedIso = formatDateISO(selectedDate);
+      const nextDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + 1, 12, 0, 0);
+      const nextIso = formatDateISO(nextDate);
+
+      const isViewingToday = selectedIso === todayIso;
+      const thisLabel = isViewingToday ? `TODAY · ${formatShortDate(selectedIso).toUpperCase()}` : `ON THIS DAY · ${formatShortDate(selectedIso).toUpperCase()}`;
+      const nextLabel = isViewingToday ? `TOMORROW · ${formatShortDate(nextIso).toUpperCase()}` : `NEXT DAY · ${formatShortDate(nextIso).toUpperCase()}`;
+
+      // 1. THIS DAY CARD
+      const thisEvents = getEventsForDate(selectedIso);
+      const thisHw = getHomeworkForDate(selectedIso, true);
+      const bannerThis = document.getElementById("bannerThisDay");
+      const dow = selectedDate.getDay();
+      const thisAutoBell = BELL_SCHEDULES[getAutomatedBellMode(selectedIso)];
+
+      let thisMainHtml = "";
+      if (thisEvents.length > 0) {
+        thisMainHtml = thisEvents.map(ev => `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">${ev.title}</span>
+            ${formatSchoolPillHtml(ev.school)}
+            ${ev.timeNote ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">⏰ ${ev.timeNote}</span>` : ""}
+          </div>
+        `).join("");
+      } else if (dow === 0 || dow === 6) {
+        thisMainHtml = `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">Weekend</span>
+            ${formatSchoolPillHtml(false)}
+          </div>
+        `;
+      } else {
+        thisMainHtml = `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">Regular School Day</span>
+            ${formatSchoolPillHtml(true)}
+            <span class="text-xs text-[var(--muted-foreground)]">· ${thisAutoBell.shortName}</span>
+          </div>
+        `;
+      }
+
+      let thisHwHtml = "";
+      if (thisHw.length > 0) {
+        const noSch = isNoSchoolDate(selectedDate);
+        thisHwHtml = `
+          <div class="mt-2 pt-2 border-t border-[var(--border)] space-y-1">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-400">📝 Homework Due This Day:</div>
+            ${thisHw.map(hw => {
+              const c = COURSES[hw.period] || COURSES[1];
+              return `<div class="text-xs font-medium flex flex-wrap items-center gap-1.5">
+                <span class="font-bold px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)]">P${c.period} ${c.name}</span>
+                <span>${hw.note}</span>
+                ${formatSchoolPillHtml(!noSch)}
+              </div>`;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      const hasNoSchool = thisEvents.some(e => !e.school) || dow === 0 || dow === 6;
+      const hasSpecialTime = thisEvents.some(e => e.bellOverride) || thisHw.length > 0;
+
+      bannerThis.className = `p-3 rounded-xl border ${
+        hasNoSchool
+          ? "bg-rose-500/10 border-rose-500/40"
+          : (hasSpecialTime ? "bg-amber-500/10 border-amber-500/40" : "bg-[var(--secondary)]/60 border-[var(--border)]")
+      }`;
+      bannerThis.innerHTML = `
+        <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] flex items-center justify-between">
+          <span>${hasNoSchool ? "🛑" : "📌"} ${thisLabel}</span>
+        </div>
+        ${thisMainHtml}
+        ${thisHwHtml}
+      `;
+
+      // 2. NEXT DAY CARD
+      const nextEvents = getEventsForDate(nextIso);
+      const nextHw = getHomeworkForDate(nextIso, true);
+      const bannerNext = document.getElementById("bannerNextDay");
+      const nextDow = nextDate.getDay();
+      const nextAutoBell = BELL_SCHEDULES[getAutomatedBellMode(nextIso)];
+
+      const upcomingEventAfterNext = getAllEvents().find(e => e.date > nextIso);
+
+      let nextMainHtml = "";
+      if (nextEvents.length > 0) {
+        nextMainHtml = nextEvents.map(ev => `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">${ev.title}</span>
+            ${formatSchoolPillHtml(ev.school)}
+            ${ev.timeNote ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">⏰ ${ev.timeNote}</span>` : ""}
+          </div>
+        `).join("");
+      } else if (nextDow === 0 || nextDow === 6) {
+        nextMainHtml = `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">Weekend</span>
+            ${formatSchoolPillHtml(false)}
+          </div>
+        `;
+      } else {
+        nextMainHtml = `
+          <div class="flex flex-wrap items-center gap-1.5 mt-1">
+            <span class="text-sm font-bold">Regular School Day</span>
+            ${formatSchoolPillHtml(true)}
+            <span class="text-xs text-[var(--muted-foreground)]">· ${nextAutoBell.shortName}</span>
+          </div>
+        `;
+      }
+
+      let nextExtraHtml = "";
+      if (nextHw.length > 0) {
+        const nextNoSch = isNoSchoolDate(nextDate);
+        nextExtraHtml = `
+          <div class="mt-2 pt-2 border-t border-[var(--border)] space-y-1">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-400">📝 Homework Reminder for Next Day:</div>
+            ${nextHw.map(hw => {
+              const c = COURSES[hw.period] || COURSES[1];
+              return `<div class="text-xs font-medium flex flex-wrap items-center gap-1.5">
+                <span class="font-bold px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)]">P${c.period} ${c.name}</span>
+                <span>${hw.note}</span>
+                ${formatSchoolPillHtml(!nextNoSch)}
+              </div>`;
+            }).join("")}
+          </div>
+        `;
+      } else if (nextEvents.length === 0 && upcomingEventAfterNext) {
+        nextExtraHtml = `
+          <div class="mt-2 pt-1.5 border-t border-[var(--border)] text-xs text-[var(--muted-foreground)] flex flex-wrap items-center gap-1">
+            <span>⏳ Upcoming (${formatShortDate(upcomingEventAfterNext.date)}): <strong class="text-[var(--foreground)]">${upcomingEventAfterNext.title}</strong></span>
+            ${formatSchoolPillHtml(upcomingEventAfterNext.school)}
+          </div>
+        `;
+      }
+
+      const nextNoSchool = nextEvents.some(e => !e.school);
+      const nextSpecialTime = nextEvents.some(e => e.bellOverride) || nextHw.length > 0;
+
+      bannerNext.className = `p-3 rounded-xl border ${
+        nextNoSchool
+          ? "bg-rose-500/10 border-rose-500/40"
+          : (nextSpecialTime ? "bg-amber-500/10 border-amber-500/40" : "bg-[var(--secondary)]/60 border-[var(--border)]")
+      }`;
+      bannerNext.innerHTML = `
+        <div class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+          🔔 ${nextLabel} REMINDER
+        </div>
+        ${nextMainHtml}
+        ${nextExtraHtml}
+      `;
+    }
+
+    function renderHomeworkTab() {
+      const filters = ["active", "all", "done"];
+      filters.forEach(f => {
+        const btn = document.getElementById(`hwFilter-${f}`);
+        if (!btn) return;
+        btn.className = state.hwFilter === f
+          ? "text-xs font-bold px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] border border-transparent shadow-sm"
+          : "text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)]";
+      });
+
+      const courseFilterVal = document.getElementById("hwCourseFilter").value;
+      let list = [...state.homeworkList].sort((a, b) => a.date.localeCompare(b.date));
+
+      if (state.hwFilter === "active") list = list.filter(h => !h.done);
+      else if (state.hwFilter === "done") list = list.filter(h => h.done);
+
+      if (courseFilterVal !== "all") {
+        list = list.filter(h => String(h.period) === courseFilterVal);
+      }
+
+      const container = document.getElementById("homeworkListContainer");
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-xs text-[var(--muted-foreground)] rounded-xl border border-dashed border-[var(--border)]">
+            No homework notes in this view yet. Pick a date and class above (or click <strong>+ HW</strong> on any class card in Daily View) to add one!
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      list.forEach(hw => {
+        const c = COURSES[hw.period] || COURSES[1];
+        const noSch = isNoSchoolDate(parseLocalDate(hw.date));
+
+        html += `
+          <div class="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[var(--secondary)]/40 border border-[var(--border)] ${c.accent} ${hw.done ? 'opacity-60' : ''}">
+            <div class="flex items-start gap-2.5 min-w-0">
+              <input
+                type="checkbox"
+                ${hw.done ? "checked" : ""}
+                onchange="toggleHomeworkDone('${hw.id}')"
+                class="mt-1 h-4 w-4 rounded cursor-pointer"
+              />
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)]">
+                    ${formatShortDate(hw.date)}, ${hw.date.slice(0, 4)}
+                  </span>
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-md border ${c.badgeBg}">
+                    Period ${c.period} · ${c.name} (${c.room})
+                  </span>
+                  ${formatSchoolPillHtml(!noSch)}
+                </div>
+                <div class="text-sm font-bold mt-1.5 ${hw.done ? 'line-through text-[var(--muted-foreground)]' : 'text-[var(--foreground)]'}">
+                  📝 ${hw.note}
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="jumpToHolidayDate('${hw.date}', true)" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--card)] hover:bg-[var(--secondary)] border border-[var(--border)]">
+                Day Before
+              </button>
+              <button onclick="jumpToHolidayDate('${hw.date}', false)" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)]">
+                View Day
+              </button>
+              <button onclick="deleteHomeworkItem('${hw.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderHolidaysTab() {
+      const filters = ["upcoming", "all", "noschool", "specialtime", "yesschool"];
+      filters.forEach(f => {
+        const btn = document.getElementById(`filterBtn-${f}`);
+        if (!btn) return;
+        btn.className = state.holidayFilter === f
+          ? "text-xs font-bold px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] border border-transparent shadow-sm"
+          : "text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)]";
+      });
+
+      const todayIso = formatDateISO(new Date());
+      let list = getAllEvents();
+
+      if (state.holidayFilter === "upcoming") list = list.filter(e => e.date >= todayIso);
+      else if (state.holidayFilter === "noschool") list = list.filter(e => !e.school);
+      else if (state.holidayFilter === "specialtime") list = list.filter(e => Boolean(e.timeNote));
+      else if (state.holidayFilter === "yesschool") list = list.filter(e => e.school);
+
+      const container = document.getElementById("holidaysListContainer");
+      if (list.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-[var(--muted-foreground)]">No events match this filter.</div>`;
+        return;
+      }
+
+      let html = "";
+      list.forEach(ev => {
+        const timeBadge = ev.timeNote
+          ? `<span class="text-xs font-bold px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">⏰ ${ev.timeNote}</span>`
+          : "";
+
+        const borderAccent = !ev.school
+          ? "border-l-4 border-l-rose-500"
+          : (ev.bellOverride ? "border-l-4 border-l-amber-500" : "border-l-4 border-l-emerald-500");
+
+        html += `
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-[var(--secondary)]/40 border border-[var(--border)] ${borderAccent}">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)]">
+                  ${formatShortDate(ev.date)}, ${ev.date.slice(0, 4)}
+                </span>
+                <span class="text-sm font-bold text-[var(--foreground)]">${ev.title}</span>
+                ${formatSchoolPillHtml(ev.school)}
+                ${timeBadge}
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="jumpToHolidayDate('${ev.date}', true)" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-[var(--card)] hover:bg-[var(--secondary)] border border-[var(--border)]">
+                Day Before
+              </button>
+              <button onclick="jumpToHolidayDate('${ev.date}', false)" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)]">
+                View Day
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function buildSingleWeekTableHtml(weekNum, activeCycleIdx) {
+      const baseIdx = weekNum === 1 ? 0 : 5;
+      const times = ["9:10 – 10:20", "10:30 – 11:40", "11:50 – 1:00", "1:50 – 3:00"];
+
+      let hHtml = `<th class="p-2.5 font-bold border-r border-[var(--border)]">Week ${weekNum}</th>`;
+      for (let d = 0; d < 5; d++) {
+        const cIdx = baseIdx + d;
+        const entry = TEN_DAY_CYCLE[cIdx];
+        const isCurrent = cIdx === activeCycleIdx;
+        const isD1 = entry.periods[0] <= 4;
+        hHtml += `
+          <th onclick="selectCycleFromGrid(${cIdx})" class="p-2.5 font-bold border-r border-[var(--border)] cursor-pointer hover:opacity-80 ${isCurrent ? 'bg-[var(--primary)]/20' : ''}">
+            <div class="text-xs">${SHORT_DAYS[d]} · Step ${cIdx + 1} ${isCurrent ? '●' : ''}</div>
+            <div class="text-xs font-medium text-[var(--muted-foreground)]">${isD1 ? "Day 1" : "Day 2"} (${entry.periods.join(",")})</div>
+          </th>
+        `;
+      }
+
+      let bHtml = "";
+      for (let slotIdx = 0; slotIdx < 4; slotIdx++) {
+        bHtml += `<tr>`;
+        bHtml += `<td class="p-2.5 font-bold border-r border-[var(--border)] bg-[var(--secondary)] whitespace-nowrap text-xs">${times[slotIdx]}</td>`;
+        for (let d = 0; d < 5; d++) {
+          const cIdx = baseIdx + d;
+          const isCurrent = cIdx === activeCycleIdx;
+          const p = TEN_DAY_CYCLE[cIdx].periods[slotIdx];
+          const c = COURSES[p];
+          bHtml += `
+            <td onclick="selectCycleFromGrid(${cIdx})" class="p-2.5 border-r border-[var(--border)] cursor-pointer hover:bg-[var(--secondary)] transition ${isCurrent ? 'bg-[var(--primary)]/10' : ''}">
+              <div class="font-bold text-xs">P${p} · ${c.name}</div>
+              <div class="text-xs text-[var(--muted-foreground)] mt-0.5">${c.room}</div>
+            </td>
+          `;
+        }
+        bHtml += `</tr>`;
+      }
+
+      return `
+        <div class="overflow-x-auto rounded-xl border border-[var(--border)]">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[var(--secondary)] border-b border-[var(--border)] text-xs">${hHtml}</tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border)] text-xs">${bHtml}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderGrid(activeCycleIdx) {
+      if (typeof activeCycleIdx !== "number") {
+        const selectedDate = parseLocalDate(state.selectedDateStr);
+        const effectiveSchoolDay = getNextSchoolDay(selectedDate);
+        activeCycleIdx = getCycleIndexForDate(effectiveSchoolDay);
+      }
+
+      const w = state.gridWeek;
+      const activeBtnClass = "text-xs font-bold px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] border border-transparent shadow-sm";
+      const inactiveBtnClass = "text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] border border-[var(--border)]";
+
+      document.getElementById("gridBtnW1").className = w === 1 ? activeBtnClass : inactiveBtnClass;
+      document.getElementById("gridBtnW2").className = w === 2 ? activeBtnClass : inactiveBtnClass;
+      document.getElementById("gridBtnBoth").className = w === 0 ? activeBtnClass : inactiveBtnClass;
+
+      const wrapper = document.getElementById("gridTablesWrapper");
+      if (w === 1) {
+        wrapper.innerHTML = buildSingleWeekTableHtml(1, activeCycleIdx);
+      } else if (w === 2) {
+        wrapper.innerHTML = buildSingleWeekTableHtml(2, activeCycleIdx);
+      } else {
+        wrapper.innerHTML = buildSingleWeekTableHtml(1, activeCycleIdx) + buildSingleWeekTableHtml(2, activeCycleIdx);
+      }
+    }
+
+    function render() {
+      syncAutoDate();
+      const now = new Date();
+      const selectedDate = parseLocalDate(state.selectedDateStr);
+      const selectedNoSchool = isNoSchoolDate(selectedDate);
+      const effectiveSchoolDay = getNextSchoolDay(selectedDate);
+      const effIso = formatDateISO(effectiveSchoolDay);
+      const cycleIdx = getCycleIndexForDate(effectiveSchoolDay);
+      const cycleInfo = TEN_DAY_CYCLE[cycleIdx];
+      const periods = cycleInfo.periods;
+      const dayType = periods[0] <= 4 ? "Day 1" : "Day 2";
+
+      const autoBellKey = getAutomatedBellMode(effIso);
+      const bell = BELL_SCHEDULES[autoBellKey] || BELL_SCHEDULES.regular;
+
+      const activeHwCount = state.homeworkList.filter(h => !h.done).length;
+      document.getElementById("hwTabCount").textContent = activeHwCount;
+
+      const timeStr = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+      document.getElementById("liveClockBadge").textContent = `Auto · ${timeStr}`;
+
+      const todayIso = formatDateISO(now);
+      const tmrwIso = formatDateISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 12, 0, 0));
+
+      document.getElementById("heroDayKicker").textContent = state.selectedDateStr === todayIso
+        ? "TODAY'S OVERVIEW"
+        : (state.selectedDateStr === tmrwIso ? "TOMORROW'S OVERVIEW" : "SELECTED DATE OVERVIEW");
+
+      document.getElementById("heroDateTitle").textContent = `${FULL_DAYS[selectedDate.getDay()]}, ${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}`;
+
+      document.getElementById("headerBadge").textContent = selectedNoSchool
+        ? `No School · Next: W${cycleInfo.week} ${dayType}`
+        : `Week ${cycleInfo.week} · ${dayType}`;
+
+      const autoBellEl = document.getElementById("autoBellBadge");
+      autoBellEl.textContent = `🔔 ${bell.shortName}`;
+      autoBellEl.className = autoBellKey === "regular"
+        ? "text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+        : "text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30";
+
+      // Tabs
+      const tabs = ["day", "homework", "holidays", "grid", "courses"];
+      const tabIds = { day: "tabDay", homework: "tabHomework", holidays: "tabHolidays", grid: "tabGrid", courses: "tabCourses" };
+      const viewIds = { day: "viewDay", homework: "viewHomework", holidays: "viewHolidays", grid: "viewGrid", courses: "viewCourses" };
+      tabs.forEach(t => {
+        const btn = document.getElementById(tabIds[t]);
+        const view = document.getElementById(viewIds[t]);
+        if (state.tab === t) {
+          btn.className = "text-xs font-bold px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm transition-all flex items-center gap-1";
+          view.classList.remove("hidden");
+        } else {
+          btn.className = "text-xs font-semibold px-3 py-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all flex items-center gap-1";
+          view.classList.add("hidden");
+        }
+      });
+
+      document.getElementById("btnAuto").className = state.autoFollow
+        ? "text-xs font-bold px-2.5 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] border border-transparent shadow-sm"
+        : "text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]";
+
+      const hrBtn = document.getElementById("btnHrFriToggle");
+      hrBtn.textContent = state.hrFriOverride ? "HR Fri: ON" : "HR Fri: Auto";
+
+      document.getElementById("dateInput").value = state.selectedDateStr;
+      document.getElementById("syncPresetSelect").value = state.syncPreset;
+
+      renderDayBanners(selectedDate, now);
+
+      document.getElementById("scheduleSectionTitle").textContent = selectedNoSchool
+        ? `Next School Day's Classes (${formatShortDate(effIso)})`
+        : `${FULL_DAYS[selectedDate.getDay()]}'s Classes (${formatShortDate(effIso)})`;
+      document.getElementById("morningNoteText").textContent = `🔔 ${bell.morningNote}`;
+      document.getElementById("periodOrderText").textContent = periods.join(" → ");
+
+      // Build High-Contrast Class Cards + Break/Lunch Dividers
+      let html = "";
+      periods.forEach((pNum, idx) => {
+        const c = COURSES[pNum];
+        const slot = bell.slots[idx];
+
+        const classHw = state.homeworkList.filter(
+          h => !h.done && h.period === pNum && (h.date === effIso || h.date === state.selectedDateStr)
+        );
+
+        const hwHtml = classHw.map(h => `
+          <div class="mt-1.5 inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30">
+            📝 HW: ${h.note}
+          </div>
+        `).join(" ");
+
+        html += `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-[var(--secondary)]/40 border border-[var(--border)] ${c.accent} hover:bg-[var(--secondary)]/70 transition">
+            
+            <!-- Left + Middle: Period Pill, Time, Course Name, Teacher -->
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <!-- Time & Period Box -->
+              <div class="w-28 shrink-0 pr-3 border-r border-[var(--border)]">
+                <span class="inline-block text-xs font-extrabold px-2 py-0.5 rounded border ${c.badgeBg}">
+                  Period ${c.period}
+                </span>
+                <div class="text-xs font-bold text-[var(--foreground)] mt-1">
+                  ${slot.time}
+                </div>
+              </div>
+
+              <!-- Course & Teacher Details -->
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm sm:text-base font-extrabold tracking-tight text-[var(--foreground)]">
+                    ${c.name}
+                  </span>
+                  <span class="text-xs font-medium text-[var(--muted-foreground)]">
+                    ${c.code}
+                  </span>
+                </div>
+                <div class="text-xs text-[var(--muted-foreground)] mt-0.5">
+                  Teacher: <strong class="font-semibold text-[var(--foreground)]">${c.teacher}</strong>
+                </div>
+                ${hwHtml}
+              </div>
+            </div>
+
+            <!-- Right: Room Badge & +HW Button -->
+            <div class="flex items-center justify-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--border)]">
+              <span class="text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] shadow-sm">
+                ${c.room}
+              </span>
+              <button
+                onclick="openAddHomeworkForClass('${effIso}', ${c.period})"
+                title="Add homework for ${c.name}"
+                class="text-xs font-bold px-2.5 py-1.5 rounded-lg bg-[var(--card)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] border border-[var(--border)] transition"
+              >
+                + HW
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Add distinct Break / Lunch divider between classes
+        if (slot.breakAfter) {
+          html += `
+            <div class="flex items-center gap-3 py-0.5 px-2">
+              <div class="h-px flex-1 bg-[var(--border)]"></div>
+              <span class="text-xs font-semibold text-[var(--muted-foreground)]">${slot.breakAfter}</span>
+              <div class="h-px flex-1 bg-[var(--border)]"></div>
+            </div>
+          `;
+        }
+      });
+      document.getElementById("dailyTimeline").innerHTML = html;
+
+      renderHomeworkTab();
+      renderHolidaysTab();
+      renderGrid(cycleIdx);
+      renderCourses();
+    }
+
+    function renderCourses() {
+      const container = document.getElementById("coursesList");
+      let html = "";
+      Object.values(COURSES).forEach(c => {
+        const spanClass = c.period === 20 ? "sm:col-span-2" : "";
+        html += `
+          <div class="p-3.5 rounded-xl bg-[var(--secondary)]/40 border border-[var(--border)] ${c.accent} ${spanClass} flex items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold px-2 py-0.5 rounded border ${c.badgeBg}">Period ${c.period} (${c.dayType})</span>
+                <span class="text-sm font-bold">${c.name}</span>
+              </div>
+              <div class="text-xs text-[var(--muted-foreground)] mt-1">${c.code} · Teacher: <strong class="text-[var(--foreground)]">${c.teacher}</strong></div>
+            </div>
+            <span class="text-xs font-bold px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] shrink-0">${c.room}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    loadSavedSettings();
+    syncAutoDate();
+    document.getElementById("hwInputDate").value = formatDateISO(getNextSchoolDay(new Date()));
+    updateHwCourseOptions();
+    render();
+    setInterval(render, 15000);
+  </script>
+</body>
+</html>
